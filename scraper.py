@@ -34,12 +34,24 @@ def download_image_from_url(url):
         shutil.copyfileobj(response.raw, out_file)
     del response
 
+def get_title_and_description(link):
+    url = 'https://memegenerator.net'+link
+    r = requests.get(url)
+    soup = BeautifulSoup(r.text,'html.parser')
+    title_div = soup.find_all(class_="section-title section-title-hide-mb")
+    title = title_div[0].find('h1').text
+    description_div =soup.find_all(class_ = 'details-text only-above-1100')
+    description = description_div[0].text 
+    return title,description
+
 
 template_links, template_imgs = get_meme_templates(n_templates)
 
-print("downlaoding images now....")
-for url in template_imgs:
-    download_image_from_url(url)
+title,description =  get_title_and_description(template_links[0])
+# print("downlaoding images now....")
+# for url in template_imgs:
+#     download_image_from_url(url)
+    
 
 
 # for i in range(1,n_templates):
