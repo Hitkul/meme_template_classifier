@@ -12,6 +12,7 @@ def get_meme_templates(n_templates):
     links = []
     imgs=[]
     for i in range(1,n_templates):
+        print("scraping page number = ",i)
         if i == 1:
             url = 'https://memegenerator.net/memes/popular/alltime'
         else:
@@ -22,13 +23,23 @@ def get_meme_templates(n_templates):
         chars = soup.find_all(class_='char-img')
         for char in chars:
             links.append(char.find('a')['href'])
-            imgs.append((char.find('img')['src'],char.find('img')['alt']))
+            imgs.append(char.find('img')['src'])
         return links,imgs
     
+def download_image_from_url(url):
+    response = requests.get(url, stream=True)
+    name_of_file = url.split('/')[-1]
+    complete_name = os.path.join(meme_template_path, name_of_file)
+    with open(complete_name,'wb') as out_file:
+        shutil.copyfileobj(response.raw, out_file)
+    del response
+
 
 template_links, template_imgs = get_meme_templates(n_templates)
 
 print(len(template_links),len(template_imgs))
+
+download_image_from_url(template_imgs[0])
 
 
 # for i in range(1,n_templates):
