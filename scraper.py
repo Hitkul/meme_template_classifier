@@ -37,9 +37,9 @@ def download_image_from_url(url):
 
 template_links, template_imgs = get_meme_templates(n_templates)
 
-print(len(template_links),len(template_imgs))
-
-download_image_from_url(template_imgs[0])
+print("downlaoding images now....")
+for url in template_imgs:
+    download_image_from_url(url)
 
 
 # for i in range(1,n_templates):
