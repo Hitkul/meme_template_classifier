@@ -7,8 +7,8 @@ import csv
 
 meme_template_path = 'memes'
 caption_path = 'captions'
-n_captions = 3   #this number *15 is the total number of captions per template
-n_templates = 3  #this number *15 is the total number of templates
+n_captions = 34   #this number *15 is the total number of captions per template
+n_templates = 34  #this number *15 is the total number of templates
 
 def get_meme_templates(n_templates):
     links = []
@@ -26,7 +26,7 @@ def get_meme_templates(n_templates):
         for char in chars:
             links.append(char.find('a')['href'])
             imgs.append(char.find('img')['src'])
-        return links,imgs
+    return links,imgs
     
 def download_image_from_url(url):
     response = requests.get(url, stream=True)
@@ -59,7 +59,6 @@ def dump_list_into_csv(tuple_list):
 def get_captions(link):
     captions = []
     for k in range(1,n_captions):
-        print("scraping caption page number = ",k)
         if k == 1:
             url = 'https://memegenerator.net' + link
         else:
