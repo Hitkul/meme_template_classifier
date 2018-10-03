@@ -6,7 +6,8 @@ import os.path
 import csv
 
 meme_template_path = 'memes'
-n_captions = 1   #this number *15 is the total number of captions per template
+caption_path = 'captions'
+n_captions = 2   #this number *15 is the total number of captions per template
 n_templates = 2  #this number *15 is the total number of templates
 
 def get_meme_templates(n_templates):
@@ -56,12 +57,38 @@ def dump_list_into_csv(tuple_list):
         for row in tuple_list:
             file_writer.writerow(row)
 
+def get_captions(link):
+    captions = []
+    for k in range(1,n_captions):
+        if k == 1:
+            url = 'https://memegenerator.net' + link
+        else:
+            url = 'https://memegenerator.net' + link + '/images/popular/alltime/page/' + str(k)
+        
+        r = requests.get(url)
+        soup = BeautifulSoup(r.text,'html.parser')
+        caption_div = soup.find_all(class_ = "optimized-instance-container img")
+        del caption_div[::2]
+        for div_i in caption_div:
+            temp =  ""
+            temp+= div_i.find(class_="optimized-instance-text0").text
+            temp+=" "
+            temp+= div_i.find(class_="optimized-instance-text1").text
+            print(temp)
+
+
+
+
+
+
 
 template_links, template_imgs = get_meme_templates(n_templates)
 
-title_description_zip = [ get_title_and_description(link) for link in template_links] 
+# title_description_zip = [ get_title_and_description(link) for link in template_links] 
 
-dump_list_into_csv(title_description_zip)
+# dump_list_into_csv(title_description_zip)
+
+get_captions(template_links[0])
 
 
 # print("downlaoding images now....")
