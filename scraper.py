@@ -47,12 +47,16 @@ def get_title_and_description(link):
 
 template_links, template_imgs = get_meme_templates(n_templates)
 
-title,description =  get_title_and_description(template_links[0])
+title_description_zip = [ get_title_and_description(template_links[0]) for link in template_links] 
+
 # print("downlaoding images now....")
 # for url in template_imgs:
 #     download_image_from_url(url)
     
 
+
+
+# ======================================================
 
 # for i in range(1,n_templates):
 #     if i == 1:
