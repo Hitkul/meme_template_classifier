@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import shutil
 import os.path
+import csv
 
 meme_template_path = 'memes'
 n_captions = 1   #this number *15 is the total number of captions per template
@@ -35,19 +36,33 @@ def download_image_from_url(url):
     del response
 
 def get_title_and_description(link):
+    print(link)
     url = 'https://memegenerator.net'+link
     r = requests.get(url)
     soup = BeautifulSoup(r.text,'html.parser')
     title_div = soup.find_all(class_="section-title section-title-hide-mb")
     title = title_div[0].find('h1').text
     description_div =soup.find_all(class_ = 'details-text only-above-1100')
-    description = description_div[0].text 
+    try:
+        description = description_div[0].text 
+    except:
+        description = None
     return title,description
+
+def dump_list_into_csv(tuple_list):
+    with open('title_description.csv','w') as in_file:
+        file_writer = csv.writer(in_file)
+        file_writer.writerow(('title','description'))
+        for row in tuple_list:
+            file_writer.writerow(row)
 
 
 template_links, template_imgs = get_meme_templates(n_templates)
 
-title_description_zip = [ get_title_and_description(template_links[0]) for link in template_links] 
+title_description_zip = [ get_title_and_description(link) for link in template_links] 
+
+dump_list_into_csv(title_description_zip)
+
 
 # print("downlaoding images now....")
 # for url in template_imgs:
