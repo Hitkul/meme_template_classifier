@@ -77,7 +77,11 @@ def get_captions(link):
             captions.append(temp)
     return captions
 
-
+def dump_captions_to_file(link):
+    captions = get_captions(link)
+    with open(caption_path+link+'.txt','w') as out_file:
+        for caption in captions:
+            out_file.write("%s\n" % caption)
 
 template_links, template_imgs = get_meme_templates(n_templates)
 
@@ -85,7 +89,8 @@ template_links, template_imgs = get_meme_templates(n_templates)
 
 # dump_list_into_csv(title_description_zip)
 
-captions = get_captions(template_links[0])
+dump_captions_to_file(template_links[0])
+# 
 
 
 # print("downlaoding images now....")
