@@ -85,17 +85,20 @@ def dump_captions_to_file(link):
 
 template_links, template_imgs = get_meme_templates(n_templates)
 
-# title_description_zip = [ get_title_and_description(link) for link in template_links] 
+print("downlaoding images now....")
+for url in template_imgs:
+    download_image_from_url(url)
 
-# dump_list_into_csv(title_description_zip)
+print("collecting titles and descriptions")
+title_description_zip = [ get_title_and_description(link) for link in template_links] 
+
+print("dumping title and desac to file")
+dump_list_into_csv(title_description_zip)
 
 dump_captions_to_file(template_links[0])
-# 
 
 
-# print("downlaoding images now....")
-# for url in template_imgs:
-#     download_image_from_url(url)
+
     
 
 
