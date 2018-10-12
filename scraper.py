@@ -30,7 +30,7 @@ def get_meme_templates(n_templates):
     
 def download_image_from_url(url,index):
     response = requests.get(url, stream=True)
-    complete_name = os.path.join(meme_template_path, index)
+    complete_name = os.path.join(meme_template_path, str(index))
     with open(complete_name,'wb') as out_file:
         shutil.copyfileobj(response.raw, out_file)
     del response
