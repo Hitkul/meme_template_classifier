@@ -28,15 +28,14 @@ def get_meme_templates(n_templates):
             imgs.append(char.find('img')['src'])
     return links,imgs
     
-def download_image_from_url(url):
+def download_image_from_url(url,index):
     response = requests.get(url, stream=True)
-    name_of_file = url.split('/')[-1]
-    complete_name = os.path.join(meme_template_path, name_of_file)
+    complete_name = os.path.join(meme_template_path, index)
     with open(complete_name,'wb') as out_file:
         shutil.copyfileobj(response.raw, out_file)
     del response
 
-def get_title_and_description(link):
+def get_title_and_description(index,link):
     url = 'https://memegenerator.net'+link
     r = requests.get(url)
     soup = BeautifulSoup(r.text,'html.parser')
@@ -47,12 +46,12 @@ def get_title_and_description(link):
         description = description_div[0].text 
     except:
         description = None
-    return title,description
+    return title,description,index,link
 
 def dump_list_into_csv(tuple_list):
     with open('title_description.csv','w') as in_file:
         file_writer = csv.writer(in_file)
-        file_writer.writerow(('title','description'))
+        file_writer.writerow(('title','description','image_name','link'))
         for row in tuple_list:
             file_writer.writerow(row)
 
@@ -76,25 +75,25 @@ def get_captions(link):
             captions.append(temp)
     return captions
 
-def dump_captions_to_file(link):
+def dump_captions_to_file(index,link):
     captions = get_captions(link)
-    with open(caption_path+link+'.txt','w') as out_file:
+    with open(caption_path+str(index)+'.txt','w') as out_file:
         for caption in captions:
             out_file.write("%s\n" % caption)
 
 template_links, template_imgs = get_meme_templates(n_templates)
 
 print("downlaoding images now....")
-for url in template_imgs:
-    download_image_from_url(url)
+for index,url in enumerate(template_imgs):
+    download_image_from_url(url,index)
 
 print("collecting titles and descriptions")
-title_description_zip = [ get_title_and_description(link) for link in template_links] 
+title_description_zip = [ get_title_and_description(index,link) for index,link in enumerate(template_links)] 
 
 print("dumping title and desac to file")
 dump_list_into_csv(title_description_zip)
 
 print("fetching and dumping captions now")
-for url in template_links:
-    dump_captions_to_file(url)
+for index,url in enumerate(template_links):
+    dump_captions_to_file(index,url)
 
